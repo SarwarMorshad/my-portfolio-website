@@ -40,7 +40,10 @@ const ParticlesBackground = () => {
             enable: true,
             mode: "push",
           },
-          resize: true,
+          resize: {
+            enable: true,
+            delay: 0.5,
+          },
         },
         modes: {
           grab: {
@@ -74,14 +77,22 @@ const ParticlesBackground = () => {
           straight: false,
           outModes: {
             default: "bounce",
+            top: "bounce",
+            bottom: "bounce",
+            left: "bounce",
+            right: "bounce",
           },
         },
         number: {
           density: {
             enable: true,
-            area: 500, // Changed from 800 (smaller = more dense)
+            area: 500,
           },
-          value: 150, // Changed from 80
+          value: 150,
+          limit: {
+            mode: "delete",
+            value: 200,
+          },
         },
         opacity: {
           value: {
@@ -98,8 +109,17 @@ const ParticlesBackground = () => {
             max: 4,
           },
         },
+        life: {
+          count: 0,
+          duration: {
+            value: 0,
+          },
+        },
+        reduceDuplicates: false,
       },
       detectRetina: true,
+      pauseOnBlur: false,
+      pauseOnOutsideViewport: false,
     }),
     []
   );

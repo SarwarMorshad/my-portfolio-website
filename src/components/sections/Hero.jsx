@@ -1,9 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FaGithub, FaLinkedinIn, FaEnvelope } from "react-icons/fa";
 import { HiArrowRight, HiDownload } from "react-icons/hi";
 import { SiReact, SiNodedotjs, SiMongodb, SiTailwindcss, SiJavascript, SiTypescript } from "react-icons/si";
 import profileImg from "../../assets/images/profile.jpg";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
   const heroRef = useRef(null);
@@ -16,12 +19,52 @@ const Hero = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const titles = [
-    "A Full Stack Developer",
-    "Building Ideas to scalable solutions",
-    "A React Enthusiast",
-    "Turning complex problems into code",
-  ];
+  // Decrypted text state
+  const [decryptedText, setDecryptedText] = useState("");
+  const [isDecrypting, setIsDecrypting] = useState(false);
+
+  const titles = ["A Creative Problem Solver", "Full Stack MERN Developer", "UI/UX Enthusiast"];
+
+  const originalDescription =
+    "I'm a skilled full-stack developer with expertise in the MERN stack. Currently pursuing my Master's at TU Chemnitz, Germany. I specialize in building modern web applications with React, Node.js, and interactive experiences.";
+
+  const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?/~`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  // Decryption effect
+  useEffect(() => {
+    const startDecryption = () => {
+      setIsDecrypting(true);
+      let iteration = 0;
+      const totalLength = originalDescription.length;
+
+      const interval = setInterval(() => {
+        setDecryptedText(
+          originalDescription
+            .split("")
+            .map((char, index) => {
+              if (char === " ") return " ";
+              if (index < iteration) {
+                return originalDescription[index];
+              }
+              return chars[Math.floor(Math.random() * chars.length)];
+            })
+            .join("")
+        );
+
+        iteration += 1;
+
+        if (iteration > totalLength) {
+          clearInterval(interval);
+          setIsDecrypting(false);
+        }
+      }, 20);
+
+      return () => clearInterval(interval);
+    };
+
+    const timeout = setTimeout(startDecryption, 1500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   // Typing effect
   useEffect(() => {
@@ -48,16 +91,23 @@ const Hero = () => {
     return () => clearTimeout(timeout);
   }, [displayText, isDeleting, currentIndex]);
 
+  // GSAP Animations
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Main timeline
+      // ========== INITIAL LOAD ANIMATIONS ==========
       const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-      // Text animations
+      // Set initial state - make sure everything is visible
+      gsap.set(
+        [".hero-greeting", ".hero-name", ".hero-title", ".hero-desc", ".hero-cta", ".hero-social-container"],
+        { opacity: 1, y: 0, filter: "blur(0px)" }
+      );
+
+      // Animate in from initial state
       tl.fromTo(".hero-greeting", { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8 })
         .fromTo(".hero-name", { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8 }, "-=0.5")
         .fromTo(".hero-title", { x: -50, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8 }, "-=0.5")
-        .fromTo(".hero-desc", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, "-=0.4")
+        .fromTo(".hero-desc", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, "-=0.5")
         .fromTo(
           ".hero-cta",
           { y: 30, opacity: 0 },
@@ -65,14 +115,19 @@ const Hero = () => {
           "-=0.4"
         )
         .fromTo(
-          ".hero-social",
+          ".hero-social-container",
           { y: 20, opacity: 0 },
-          { y: 0, opacity: 1, duration: 0.5, stagger: 0.1 },
+          { y: 0, opacity: 1, duration: 0.5 },
           "-=0.3"
         );
 
       // Image animation
-      tl.fromTo(imageRef.current, { scale: 0.8, opacity: 0 }, { scale: 1, opacity: 1, duration: 1 }, "-=1.5");
+      tl.fromTo(
+        ".hero-image-container",
+        { scale: 0.8, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 1 },
+        "-=1.5"
+      );
 
       // Floating tech icons
       gsap.fromTo(
@@ -87,7 +142,7 @@ const Hero = () => {
         }
       );
 
-      // Continuous floating animation for icons
+      // Continuous animations
       gsap.to(".floating-icon", {
         y: -10,
         duration: 2,
@@ -97,7 +152,6 @@ const Hero = () => {
         stagger: 0.2,
       });
 
-      // Rotate ring animation
       gsap.to(".hero-ring", {
         rotation: 360,
         duration: 20,
@@ -105,7 +159,6 @@ const Hero = () => {
         ease: "none",
       });
 
-      // Glow pulse
       gsap.to(".hero-glow", {
         scale: 1.1,
         opacity: 0.8,
@@ -114,6 +167,29 @@ const Hero = () => {
         yoyo: true,
         ease: "sine.inOut",
       });
+
+      // ========== SCROLL FADE EFFECT ==========
+
+      // Create a timeline for scroll animations
+      const scrollTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: heroRef.current,
+          start: "top top",
+          end: "bottom top",
+          scrub: 1,
+        },
+      });
+
+      // Add animations to the scroll timeline
+      scrollTl
+        .to(".hero-greeting", { y: -100, opacity: 0, filter: "blur(10px)" }, 0)
+        .to(".hero-name", { y: -120, opacity: 0, filter: "blur(10px)" }, 0.05)
+        .to(".hero-title", { y: -100, opacity: 0, filter: "blur(10px)" }, 0.1)
+        .to(".hero-desc", { y: -80, opacity: 0, filter: "blur(10px)" }, 0.15)
+        .to(".hero-cta", { y: -60, opacity: 0, filter: "blur(10px)", stagger: 0.02 }, 0.2)
+        .to(".hero-social-container", { y: -40, opacity: 0, filter: "blur(10px)" }, 0.25)
+        .to(".hero-image-container", { y: -80, opacity: 0, scale: 0.9, filter: "blur(5px)" }, 0)
+        .to(".floating-icon", { opacity: 0, scale: 0, stagger: 0.02 }, 0.1);
     }, heroRef);
 
     return () => ctx.revert();
@@ -128,11 +204,58 @@ const Hero = () => {
     { Icon: SiTypescript, color: "#3178C6", position: "top-20 left-5" },
   ];
 
+  // Render description with highlighted keywords
+  const renderDecryptedText = () => {
+    if (!decryptedText) {
+      return (
+        <span className="text-primary/50">
+          {chars
+            .split("")
+            .slice(0, originalDescription.length)
+            .map(() => chars[Math.floor(Math.random() * chars.length)])
+            .join("")}
+        </span>
+      );
+    }
+
+    const highlightWords = [
+      { word: "MERN stack", color: "text-primary font-semibold" },
+      { word: "TU Chemnitz, Germany", color: "text-secondary font-semibold" },
+      { word: "React", color: "text-cyan-400" },
+      { word: "Node.js", color: "text-green-400" },
+    ];
+
+    let result = decryptedText;
+    let elements = [];
+    let lastIndex = 0;
+
+    highlightWords.forEach(({ word, color }) => {
+      const index = result.indexOf(word, lastIndex);
+      if (index !== -1) {
+        if (index > lastIndex) {
+          elements.push(<span key={`text-${lastIndex}`}>{result.substring(lastIndex, index)}</span>);
+        }
+        elements.push(
+          <span key={`highlight-${index}`} className={color}>
+            {word}
+          </span>
+        );
+        lastIndex = index + word.length;
+      }
+    });
+
+    if (lastIndex < result.length) {
+      elements.push(<span key={`text-end`}>{result.substring(lastIndex)}</span>);
+    }
+
+    return elements.length > 0 ? elements : decryptedText;
+  };
+
   return (
     <section
       ref={heroRef}
       id="home"
-      className="min-h-screen flex items-center px-8 lg:px-16 py-20 overflow-hidden"
+      className="min-h-screen flex items-center px-8 lg:px-16 py-20 overflow-hidden relative"
     >
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Side - Text Content */}
@@ -160,13 +283,26 @@ const Hero = () => {
             </span>
           </h2>
 
-          {/* Description */}
-          <p className="hero-desc text-base-content/60 text-base md:text-lg max-w-xl mb-8 leading-relaxed">
-            I'm a skilled full-stack developer with expertise in the{" "}
-            <span className="text-primary">MERN stack</span>. Currently pursuing my Master's at{" "}
-            <span className="text-secondary">TU Chemnitz, Germany</span>. I specialize in building modern web
-            applications with React, Node.js, and interactive experiences.
-          </p>
+          {/* Description with Decryption Effect */}
+          <div className="hero-desc relative mb-8">
+            {isDecrypting && (
+              <div className="absolute -left-6 top-1/2 -translate-y-1/2 flex flex-col gap-1">
+                <span className="w-1.5 h-1.5 bg-primary rounded-full animate-ping" />
+              </div>
+            )}
+
+            <p
+              className={`text-base-content/60 text-base md:text-lg max-w-xl leading-relaxed font-mono transition-all duration-300 ${
+                isDecrypting ? "text-primary/70" : ""
+              }`}
+            >
+              {renderDecryptedText()}
+            </p>
+
+            {isDecrypting && (
+              <div className="absolute -bottom-2 left-0 h-[2px] bg-gradient-to-r from-primary to-secondary animate-pulse w-full opacity-50" />
+            )}
+          </div>
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap gap-4 mb-10">
@@ -186,7 +322,7 @@ const Hero = () => {
           </div>
 
           {/* Social Links */}
-          <div className="flex items-center gap-4">
+          <div className="hero-social-container flex items-center gap-4">
             <span className="text-base-content/40 text-sm">Find me on</span>
             <div className="flex gap-3">
               <a
@@ -218,7 +354,7 @@ const Hero = () => {
         </div>
 
         {/* Right Side - Profile Image with Effects */}
-        <div className="relative flex items-center justify-center">
+        <div className="hero-image-container relative flex items-center justify-center">
           {/* Background Glows */}
           <div className="hero-glow absolute w-[400px] h-[400px] bg-primary/30 rounded-full blur-[100px]" />
           <div className="absolute w-[300px] h-[300px] bg-secondary/20 rounded-full blur-[80px] translate-x-20" />
@@ -272,6 +408,14 @@ const Hero = () => {
       <div className="absolute top-20 left-10 w-20 h-20 border border-primary/10 rounded-lg rotate-12 animate-pulse" />
       <div className="absolute bottom-20 right-10 w-16 h-16 border border-secondary/10 rounded-full animate-bounce" />
       <div className="absolute top-1/2 right-1/4 w-2 h-20 bg-gradient-to-b from-primary/20 to-transparent rounded-full" />
+
+      {/* Scroll Indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
+        <span className="text-base-content/40 text-xs uppercase tracking-widest">Scroll</span>
+        <div className="w-6 h-10 border-2 border-base-content/20 rounded-full flex justify-center pt-2">
+          <div className="w-1.5 h-3 bg-primary rounded-full animate-pulse" />
+        </div>
+      </div>
     </section>
   );
 };

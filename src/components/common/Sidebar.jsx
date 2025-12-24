@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { HiHome, HiUser, HiCode, HiFolderOpen, HiMail, HiDownload } from "react-icons/hi";
 import { FaGithub, FaLinkedinIn } from "react-icons/fa";
 
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
 
   const navLinks = [
     { name: "Home", icon: <HiHome size={22} />, href: "#home" },
@@ -31,6 +32,35 @@ const Sidebar = () => {
     },
   ];
 
+  // Track active section on scroll
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = navLinks.map((link) => link.href.replace("#", ""));
+
+      for (const section of sections) {
+        const element = document.getElementById(section);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          // Check if section is in viewport (with some offset)
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Check initial position
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Handle click to set active
+  const handleNavClick = (href) => {
+    setActiveSection(href.replace("#", ""));
+  };
+
   return (
     <aside
       onMouseEnter={() => setIsExpanded(true)}
@@ -42,23 +72,35 @@ const Sidebar = () => {
       {/* Navigation Links */}
       <nav>
         <ul className="space-y-1">
-          {navLinks.map((link) => (
-            <li key={link.name}>
-              <a
-                href={link.href}
-                className="flex items-center gap-4 p-2.5 rounded-xl text-base-content/70 hover:text-primary hover:bg-base-300/50 transition-all duration-200"
-              >
-                <span className="min-w-[22px]">{link.icon}</span>
-                <span
-                  className={`whitespace-nowrap text-sm transition-all duration-300 ${
-                    isExpanded ? "opacity-100" : "opacity-0 w-0"
+          {navLinks.map((link) => {
+            const isActive = activeSection === link.href.replace("#", "");
+            return (
+              <li key={link.name}>
+                <a
+                  href={link.href}
+                  onClick={() => handleNavClick(link.href)}
+                  className={`flex items-center gap-4 p-2.5 rounded-xl transition-all duration-200 ${
+                    isActive
+                      ? "bg-primary/20 text-primary border-l-2 border-primary"
+                      : "text-base-content/70 hover:text-primary hover:bg-base-300/50"
                   }`}
                 >
-                  {link.name}
-                </span>
-              </a>
-            </li>
-          ))}
+                  <span className="min-w-[22px]">{link.icon}</span>
+                  <span
+                    className={`whitespace-nowrap text-sm transition-all duration-300 ${
+                      isExpanded ? "opacity-100" : "opacity-0 w-0"
+                    }`}
+                  >
+                    {link.name}
+                  </span>
+                  {/* Active indicator dot (when collapsed) */}
+                  {isActive && !isExpanded && (
+                    <span className="absolute right-1 w-1.5 h-1.5 bg-primary rounded-full" />
+                  )}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 

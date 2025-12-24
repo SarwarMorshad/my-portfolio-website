@@ -1,7 +1,15 @@
+import Sidebar from "../components/common/Sidebar";
+import About from "../components/sections/About";
+import Hero from "../components/sections/Hero";
+
 const Home = () => {
   return (
-    <div className="h-screen flex items-center justify-center">
-      <h1 className="text-5xl font-bold">Shovon's Portfolio</h1>
+    <div className="min-h-screen">
+      {/* Sidebar */}
+      <Sidebar />
+
+      <Hero />
+      <About />
     </div>
   );
 };

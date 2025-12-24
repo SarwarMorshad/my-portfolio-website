@@ -26,7 +26,7 @@ const Hero = () => {
   const titles = ["A Creative Problem Solver", "Full Stack MERN Developer", "UI/UX Enthusiast"];
 
   const originalDescription =
-    "I'm a skilled full-stack developer with expertise in the MERN stack. Currently pursuing my Master's at TU Chemnitz, Germany. I specialize in building modern web applications with React, Node.js, and interactive experiences.";
+    "I am a dedicated Software Developer with a strong background in front-end and full-stack development, currently pursuing a Master’s in Automotive Software Engineering at Technische Universität Chemnitz, Germany. My academic journey and professional experiences have equipped me with both the technical expertise and practical skills to design and deliver scalable, user-focused software solutions.";
 
   const chars = "!@#$%^&*()_+-=[]{}|;:,.<>?/~`ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
@@ -261,14 +261,14 @@ const Hero = () => {
         {/* Left Side - Text Content */}
         <div ref={textRef} className="z-10">
           {/* Greeting */}
-          <p className="hero-greeting text-secondary text-lg md:text-xl mb-4 tracking-wider">✨ Hello, I'm</p>
+          <p className="hero-greeting text-secondary text-lg md:text-xl mb-4 tracking-wider">Hello, I'm</p>
 
           {/* Name */}
           <h1 className="hero-name text-5xl md:text-6xl lg:text-7xl font-bold mb-2">
             <span className="text-base-content">Sarwar</span>
           </h1>
           <h1 className="hero-name text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
               Morshad
             </span>
             <span className="text-primary">.</span>
@@ -276,7 +276,7 @@ const Hero = () => {
 
           {/* Title with typing effect */}
           <h2 className="hero-title text-xl md:text-2xl lg:text-3xl text-base-content/80 mb-6 flex items-center gap-3 h-10">
-            <span className="w-8 h-[2px] bg-secondary"></span>
+            <span className="w-8 h-0.5 bg-secondary"></span>
             <span className="text-primary font-semibold">
               {displayText}
               <span className="animate-pulse text-secondary">|</span>
@@ -300,7 +300,7 @@ const Hero = () => {
             </p>
 
             {isDecrypting && (
-              <div className="absolute -bottom-2 left-0 h-[2px] bg-gradient-to-r from-primary to-secondary animate-pulse w-full opacity-50" />
+              <div className="absolute -bottom-2 left-0 h-0.5 bg-linear-to-r from-primary to-secondary animate-pulse w-full opacity-50" />
             )}
           </div>
 
@@ -356,20 +356,20 @@ const Hero = () => {
         {/* Right Side - Profile Image with Effects */}
         <div className="hero-image-container relative flex items-center justify-center">
           {/* Background Glows */}
-          <div className="hero-glow absolute w-[400px] h-[400px] bg-primary/30 rounded-full blur-[100px]" />
-          <div className="absolute w-[300px] h-[300px] bg-secondary/20 rounded-full blur-[80px] translate-x-20" />
+          <div className="hero-glow absolute w-100 h-100 bg-primary/30 rounded-full blur-[100px]" />
+          <div className="absolute w-75 h-75 bg-secondary/20 rounded-full blur-[80px] translate-x-20" />
 
           {/* Rotating Ring */}
-          <div className="hero-ring absolute w-[420px] h-[420px] border border-dashed border-primary/30 rounded-full" />
+          <div className="hero-ring absolute w-105 h-105 border border-dashed border-primary/30 rounded-full" />
           <div
-            className="hero-ring absolute w-[480px] h-[480px] border border-base-300/20 rounded-full"
+            className="hero-ring absolute w-120 h-120 border border-base-300/20 rounded-full"
             style={{ animationDirection: "reverse" }}
           />
 
           {/* Profile Image Container */}
-          <div ref={imageRef} className="relative w-[320px] h-[320px] md:w-[380px] md:h-[380px]">
+          <div ref={imageRef} className="relative w-80 h-80 md:w-95 md:h-95">
             {/* Gradient Border */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-primary via-secondary to-accent p-[3px]">
+            <div className="absolute inset-0 rounded-full bg-linear-to-br from-primary via-secondary to-accent p-0.75">
               <div className="w-full h-full rounded-full bg-base-100 p-2">
                 {/* Image */}
                 <div className="w-full h-full rounded-full overflow-hidden bg-base-200">
@@ -407,7 +407,7 @@ const Hero = () => {
       {/* Background Decorative Shapes */}
       <div className="absolute top-20 left-10 w-20 h-20 border border-primary/10 rounded-lg rotate-12 animate-pulse" />
       <div className="absolute bottom-20 right-10 w-16 h-16 border border-secondary/10 rounded-full animate-bounce" />
-      <div className="absolute top-1/2 right-1/4 w-2 h-20 bg-gradient-to-b from-primary/20 to-transparent rounded-full" />
+      <div className="absolute top-1/2 right-1/4 w-2 h-20 bg-linear-to-b from-primary/20 to-transparent rounded-full" />
 
       {/* Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">

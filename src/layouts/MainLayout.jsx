@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import useSmoothScroll from "../hooks/useSmoothScroll";
 import ParticlesBackground from "../components/three/ParticlesBackground";
 import Sidebar from "../components/common/Sidebar";
+import Hero from "../components/sections/Hero";
 
 const MainLayout = () => {
   useSmoothScroll();
@@ -12,6 +13,8 @@ const MainLayout = () => {
 
       {/* Sidebar */}
       <Sidebar />
+
+      <Hero />
 
       {/* Main Content Area */}
       <main className="ml-20">

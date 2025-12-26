@@ -1,3 +1,4 @@
+import MobileNavTabs from "../components/common/MobileNavTabs";
 import Sidebar from "../components/common/Sidebar";
 import About from "../components/sections/About";
 import Contact from "../components/sections/Contact";
@@ -10,6 +11,7 @@ const Home = () => {
     <div className="min-h-screen">
       {/* Sidebar */}
       <Sidebar />
+      <MobileNavTabs />
 
       <Hero />
       <About />

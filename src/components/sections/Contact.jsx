@@ -11,6 +11,7 @@ const Contact = () => {
   const sectionRef = useRef(null);
   const chatContainerRef = useRef(null);
   const hasInitialized = useRef(false);
+  const scrollTriggerRef = useRef(null);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -90,69 +91,65 @@ const Contact = () => {
     }
   }, [messages, isTyping]);
 
-  // Initialize chat
-  useEffect(() => {
+  // Function to initialize chat messages
+  const initializeChat = () => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
 
-    const showInitialMessages = async () => {
-      // Message 1
-      setTimeout(() => {
-        setIsTyping(true);
-      }, 500);
+    // Message 1
+    setTimeout(() => {
+      setIsTyping(true);
+    }, 300);
 
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: "Hey! Welcome to my portfolio! 🚀",
-            sender: "bot",
-            id: Date.now(),
-            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          },
-        ]);
-        setIsTyping(false);
-      }, 1300);
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Hey! Welcome to my portfolio! 🚀",
+          sender: "bot",
+          id: Date.now(),
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        },
+      ]);
+      setIsTyping(false);
+    }, 1000);
 
-      // Message 2
-      setTimeout(() => {
-        setIsTyping(true);
-      }, 1500);
+    // Message 2
+    setTimeout(() => {
+      setIsTyping(true);
+    }, 1200);
 
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: "I'm Sarwar, a Full Stack Developer based in Berlin.",
-            sender: "bot",
-            id: Date.now() + 1,
-            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          },
-        ]);
-        setIsTyping(false);
-      }, 2300);
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "I'm Sarwar, a Full Stack Developer based in Berlin.",
+          sender: "bot",
+          id: Date.now() + 1,
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        },
+      ]);
+      setIsTyping(false);
+    }, 2000);
 
-      // Message 3
-      setTimeout(() => {
-        setIsTyping(true);
-      }, 2500);
+    // Message 3
+    setTimeout(() => {
+      setIsTyping(true);
+    }, 2200);
 
-      setTimeout(() => {
-        setMessages((prev) => [
-          ...prev,
-          {
-            text: conversationSteps[0].question,
-            sender: "bot",
-            id: Date.now() + 2,
-            time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          },
-        ]);
-        setIsTyping(false);
-      }, 3300);
-    };
-
-    showInitialMessages();
-  }, []);
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: conversationSteps[0].question,
+          sender: "bot",
+          id: Date.now() + 2,
+          time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        },
+      ]);
+      setIsTyping(false);
+    }, 3000);
+  };
 
   // Add bot message helper
   const addBotMessage = (text) => {
@@ -290,9 +287,18 @@ const Contact = () => {
     }, 1100);
   };
 
-  // GSAP Animations
+  // GSAP Animations & Chat Initialization on Scroll
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // 👈 THIS IS THE KEY: Initialize chat ONLY when section enters viewport
+      scrollTriggerRef.current = ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 70%",
+        onEnter: () => {
+          initializeChat();
+        },
+      });
+
       // Header animation - Fade IN
       gsap.fromTo(
         ".contact-header",
@@ -364,7 +370,12 @@ const Contact = () => {
         .to(".info-panel", { opacity: 0, x: 50, filter: "blur(10px)" }, 0.1);
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.kill();
+      }
+    };
   }, []);
 
   return (
@@ -433,6 +444,18 @@ const Contact = () => {
 
               {/* Messages Container */}
               <div ref={chatContainerRef} className="h-[400px] overflow-y-auto p-6 space-y-4">
+                {/* Empty state when no messages yet */}
+                {messages.length === 0 && !isTyping && (
+                  <div className="h-full flex items-center justify-center">
+                    <div className="text-center text-base-content/40">
+                      <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-base-300/50 flex items-center justify-center">
+                        <span className="text-2xl">💬</span>
+                      </div>
+                      <p className="text-sm">Chat will start when you scroll here...</p>
+                    </div>
+                  </div>
+                )}
+
                 {messages.map((msg) => (
                   <div
                     key={msg.id}
@@ -490,7 +513,6 @@ const Contact = () => {
                       onChange={handleInputChange}
                       placeholder={conversationSteps[currentStep]?.placeholder}
                       className="flex-1 px-4 py-3 bg-base-300/30 border border-base-300 rounded-xl text-base-content placeholder:text-base-content/30 focus:outline-none focus:border-primary/50 transition-colors"
-                      autoFocus
                     />
                     <button
                       type="submit"
@@ -580,31 +602,40 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Quick Response */}
-            <div className="relative group">
-              {/* Animated glow background */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-2xl blur-md opacity-60 group-hover:opacity-100 animate-pulse transition-opacity"></div>
+            {/* Quick Response - Enhanced */}
+            <div className="bg-base-300/50 border border-base-300 rounded-2xl p-5 relative overflow-hidden group hover:border-green-500/50 transition-all">
+              {/* Animated background pulse */}
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/10 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-              <div className="relative bg-base-200 border border-primary/50 rounded-2xl p-6">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center animate-bounce">
+              <div className="relative flex items-center gap-4">
+                {/* Icon with pulse */}
+                <div className="relative flex-shrink-0">
+                  <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-30"></div>
+                  <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/30">
                     <span className="text-2xl">⚡</span>
                   </div>
-                  <div>
-                    <p className="text-xs text-green-400">Usually within 24 hours</p>
-                  </div>
                 </div>
-                <p className="text-sm text-base-content/80">
-                  For urgent matters, reach out on{" "}
-                  <a
-                    href="https://www.linkedin.com/in/sarwarmorshad/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary font-semibold hover:underline"
-                  >
-                    LinkedIn →
-                  </a>
-                </p>
+
+                {/* Content */}
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h4 className="text-base font-bold text-base-content">Quick Response</h4>
+                    <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-bold rounded-full">
+                      24h
+                    </span>
+                  </div>
+                  <p className="text-sm text-base-content/60">
+                    Urgent?{" "}
+                    <a
+                      href="https://www.linkedin.com/in/sarwarmorshad/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-green-400 font-medium hover:underline"
+                    >
+                      DM me on LinkedIn →
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>

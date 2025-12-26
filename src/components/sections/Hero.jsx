@@ -255,7 +255,7 @@ const Hero = () => {
     <section
       ref={heroRef}
       id="home"
-      className="min-h-screen flex items-center px-8 lg:px-16 py-20 overflow-hidden relative"
+      className="min-h-screen flex items-center px-8 lg:px-16 py-20 overflow-hidden relative pt-24 lg:pt-0"
     >
       <div className="max-w-7xl mx-auto w-full grid lg:grid-cols-2 gap-12 items-center">
         {/* Left Side - Text Content */}

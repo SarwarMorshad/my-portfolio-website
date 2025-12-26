@@ -65,7 +65,7 @@ const Sidebar = () => {
     <aside
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
-      className={`fixed left-4 top-1/2 -translate-y-1/2 z-50 flex flex-col py-4 px-3 bg-base-200/80 backdrop-blur-md border border-base-300 rounded-2xl transition-all duration-300 ease-in-out ${
+      className={`hidden lg:flex fixed left-4 top-1/2 -translate-y-1/2 z-50 flex-col py-4 px-3 bg-base-200/80 backdrop-blur-md border border-base-300 rounded-2xl transition-all duration-300 ease-in-out ${
         isExpanded ? "w-48" : "w-14"
       }`}
     >

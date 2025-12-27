@@ -10,7 +10,7 @@ const MainLayout = () => {
       <ParticlesBackground />
 
       {/* Main Content Area */}
-      <main className="ml-20">
+      <main className="">
         <Outlet />
       </main>
     </div>

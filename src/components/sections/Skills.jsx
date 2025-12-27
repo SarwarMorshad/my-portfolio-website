@@ -731,34 +731,6 @@ const SkillsRadar = () => {
                         </div>
                       </div>
                     </div>
-
-                    {/* Tooltip on hover */}
-                    {isHighlighted && (
-                      <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-base-100 border border-base-300 rounded-xl p-3 shadow-2xl min-w-[180px] z-30 animate-fadeIn">
-                        <p className="text-xs text-base-content/60 mb-2">
-                          {category.skills.length} technologies
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {category.skills.slice(0, 4).map((skill, i) => (
-                            <span
-                              key={i}
-                              className="text-xs px-2 py-1 rounded-full"
-                              style={{
-                                backgroundColor: `${category.color}20`,
-                                color: category.color,
-                              }}
-                            >
-                              {skill.name}
-                            </span>
-                          ))}
-                          {category.skills.length > 4 && (
-                            <span className="text-xs px-2 py-1 rounded-full bg-base-300 text-base-content/60">
-                              +{category.skills.length - 4} more
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 );
               })}

@@ -603,39 +603,30 @@ const Contact = () => {
             </div>
 
             {/* Quick Response - Enhanced */}
-            <div className="bg-base-300/50 border border-base-300 rounded-2xl p-5 relative overflow-hidden group hover:border-green-500/50 transition-all">
-              {/* Animated background pulse */}
-              <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/10 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative group">
+              {/* Animated glow background */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary via-secondary to-accent rounded-2xl blur-md opacity-60 group-hover:opacity-100 animate-pulse transition-opacity"></div>
 
-              <div className="relative flex items-center gap-4">
-                {/* Icon with pulse */}
-                <div className="relative flex-shrink-0">
-                  <div className="absolute inset-0 bg-green-500 rounded-full animate-ping opacity-30"></div>
-                  <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center shadow-lg shadow-green-500/30">
+              <div className="relative bg-base-200 border border-primary/50 rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center animate-bounce">
                     <span className="text-2xl">⚡</span>
                   </div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <h4 className="text-base font-bold text-base-content">Quick Response</h4>
-                    <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-bold rounded-full">
-                      24h
-                    </span>
+                  <div>
+                    <p className="text-sm text-green-400">Response within 24 hours</p>
                   </div>
-                  <p className="text-sm text-base-content/60">
-                    Urgent?{" "}
-                    <a
-                      href="https://www.linkedin.com/in/sarwarmorshad/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-green-400 font-medium hover:underline"
-                    >
-                      DM me on LinkedIn →
-                    </a>
-                  </p>
                 </div>
+                <p className="text-sm text-base-content/80">
+                  For urgent matters, reach out on{" "}
+                  <a
+                    href="https://www.linkedin.com/in/sarwarmorshad/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary font-semibold hover:underline"
+                  >
+                    LinkedIn →
+                  </a>
+                </p>
               </div>
             </div>
           </div>
